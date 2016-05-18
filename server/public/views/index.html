@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Put that Postgres in that Node</title>
+    <script src="/vendor/jquery.min.js"></script>
+    <script src="/scripts/clientapp.js"></script>
+  </head>
+  <body>
+    <h1>Add an owner</h1>
+    <form id="ownerForm">
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" name="firstName" />
+
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName" />
+
+      <button id="ownerSubmit">Submit</button>
+    </form>
+
+    <h1>Add a pet!</h1>
+    <form id="petForm">
+      <label for="petName">Pet's Name:</label>
+      <input type="text" id="petName" name="petName" />
+
+      <label for="breed">Breed:</label>
+      <input type="text" id="breed" name="breed" />
+
+      <label for="color">Color:</label>
+      <input type="text" id="color" name="color" />
+
+      <label for="owners">Owner's Name:</label>
+      <select name ="owners" id="owners">
+
+      </select>
+
+      <button id="petSubmit">Submit</button>
+    </form>
+
+    <h1>Pet Status</h1>
+    <div id="petStatus">
+
+    </div>
+  </body>
+</html>
