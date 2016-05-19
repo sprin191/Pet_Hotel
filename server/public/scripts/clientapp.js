@@ -28,7 +28,7 @@ function dataPrep(button) {
 }
 
 function getPetId(button) {
-  // get the movie ID
+  // get the pet ID
   var petId = button.parent().data('petID');
   console.log('getPetId', petId);
   return petId;
@@ -65,7 +65,7 @@ function deletePet(event) {
   });
 }
 
-//gets owners info from database
+//gets owner's info from database
 function getOwners() {
   $.ajax({
     type: 'GET',
