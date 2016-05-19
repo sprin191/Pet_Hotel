@@ -65,7 +65,7 @@ function deletePet(event) {
   });
 }
 
-//gets owners info from database
+//gets owner's info from database
 function getOwners() {
   $.ajax({
     type: 'GET',
