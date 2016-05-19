@@ -9,8 +9,9 @@ router.get('/', function (req, res) {
       res.sendStatus(500);
     }
 
-    client.query('SELECT first_name, last_name, name, breed, color, pets.id FROM pets' +
-' JOIN owners ON owners.id = pets.owner_id',
+    client.query('SELECT first_name, last_name, name, breed, color, pets.id, check_in, check_out FROM pets' +
+' JOIN owners ON owners.id = pets.owner_id' +
+' LEFT OUTER JOIN visits ON visits.pet_id = pets.id',
 function (err, result) {
       done();
 

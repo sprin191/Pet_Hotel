@@ -28,7 +28,7 @@ function dataPrep(button) {
 }
 
 function getPetId(button) {
-  // get the movie ID
+  // get the pet ID
   var petId = button.parent().data('petID');
   console.log('getPetId', petId);
   return petId;
@@ -82,6 +82,8 @@ owners.forEach(function (owners) {
   });
 }
 function getPets() {
+
+  var checkedIn = 'Check In';
   $.ajax({
     type: 'GET',
     url: '/pets',
@@ -98,11 +100,13 @@ function getPets() {
           $el.val(pet[prop]);
           $container.append($el);
         });
-
+        if (!pet['check_in']&&pet['check_out']) {
+          checkIn = 'Check Out';
+        }
          $container.data('petID', pet.id);
          $container.append('<button class="update">Update</button>');
          $container.append('<button class="delete">Delete</button>');
-         $container.append('<button class="checkInOut">Check In</button>');
+         $container.append('<button class="checkInOut">' + checkedIn + '</button>');
         $('#petStatus').append($container);
       });
     },
@@ -155,11 +159,14 @@ if ($(this).text() === "Check In") {
 
     },
   });
-  $(this).text("Check Out");
+  getPets();
+  //$(this).data({'checkedIn' : 'true'});
+
 }
-/*else {
-  var checkOutTime = Date($.now());
-  visit = {'checkOut' : checkOutTime, 'petID' : petId};
+else {
+  var checkOutTime = new Date();
+  var updatedTime2 = checkOutTime.toISOString();
+  visit = {'checkOut' : updatedTime2, 'petID' : petId};
   $.ajax({
     type: 'POST',
     url: '/visits',
@@ -168,8 +175,29 @@ if ($(this).text() === "Check In") {
       //getPets();
     },
   });
-  $(this).text("Check In");
-}*/
+getPets();
+}
+
+}
+
+function getVisits(event) {
+  event.preventDefault();
+  $.ajax({
+    type: 'GET',
+    url: '/visits',
+    success: function (visits) {
+      console.log(visits);
+
+visits.forEach(function (visit) {
+      if(visit.check_out==NULL) {
+
+      }
+
+       });
+
+
+    },
+  });
 
 }
 

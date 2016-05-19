@@ -9,7 +9,7 @@ router.get('/', function (req, res) {
       res.sendStatus(500);
     }
 
-    client.query('SELECT check_in, check_out, pet_id FROM visits', function (err, result) {
+    client.query('SELECT * FROM visits', function (err, result) {
       done();
 
       console.log(result.rows);
