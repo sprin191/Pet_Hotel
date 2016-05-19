@@ -1,65 +1,66 @@
 $(document).ready(function () {
   getOwners();
+  getPets();
 
-  // add a movie
   $('#ownerSubmit').on('click', postOwner);
-  //$('#petSubmit').on('click', postPet);
+  $('#petSubmit').on('click', postPet);
+// event listeners
+  $('#petStatus').on('click', '.update', putPet);
+  $('#petStatus').on('click', '.delete', deletePet);
 
+  $('#petStatus').on('click', '.checkInOut', postVisit);
 
-  // event listeners for Movies list
-////  $('#movieList').on('click', '.update', putMovie);
-  //$('#movieList').on('click', '.delete', deleteMovie);
 });
 
 /**-------- UTILITY FUNCTIONS --------**/
 function dataPrep(button) {
-  // get the movie data
-  var movie = {};
+  // get the pet data
+  var pet = {};
   console.log(button.parent().children());
   console.log(button.parent().children().serializeArray());
   $.each(button.parent().children().serializeArray(), function (i, field) {
-    movie[field.name] = field.value;
+    pet[field.name] = field.value;
   });
 
-  console.log('dataPrep', movie);
+  console.log('dataPrep', pet);
 
-  return movie;
+  return pet;
 }
 
-function getMovieId(button) {
+function getPetId(button) {
   // get the movie ID
-  var movieId = button.parent().data('movieId');
-  console.log('getMovieId', movieId);
-  return movieId;
+  var petId = button.parent().data('petID');
+  console.log('getPetId', petId);
+  return petId;
 }
 
 /**-------- AJAX FUNCTIONS --------**/
-function putMovie(event) {
+function putPet(event) {
   event.preventDefault();
 
   var preparedData = dataPrep($(this));
-  var movieId = getMovieId($(this));
+  var petId = getPetId($(this));
 
   $.ajax({
     type: 'PUT',
-    url: '/movies/' + movieId,
+    url: '/pets/' + petId,
     data: preparedData,
     success: function (data) {
-      getMovies();
+      getPets();
     },
   });
 }
 
-function deleteMovie(event) {
+function deletePet(event) {
   event.preventDefault();
 
-  var movieId = getMovieId($(this));
+  var petId = getPetId($(this));
 
   $.ajax({
     type: 'DELETE',
-    url: '/movies/' + movieId,
+    url: '/pets/' + petId,
     success: function (data) {
-      getMovies();
+      getPets();
     },
   });
 }
@@ -71,54 +72,42 @@ function getOwners() {
     url: '/owners',
     success: function (owners) {
       console.log(owners);
+      $('#owner').empty();
 owners.forEach(function (owners) {
-      $('#owners').append('<option value="' + owners.id + '">' + owners.first_name + ' ' + owners.last_name + '</option>');
+      $('#owner').append('<option value="' + owners.id + '">' + owners.first_name + ' ' + owners.last_name + '</option>');
        });
-      // movies.forEach(function (movie) {
-      //   $container = $('<div></div>');
-      //
-      //   // fields I want to edit
-      //   var movieProperties = ['title', 'year', 'director'];
-      //   movieProperties.forEach(function (prop) {
-      //     var $el = $('<input type="text" id="' + prop + '" name="' + prop + '" />');
-      //     $el.val(movie[prop]);
-      //     $container.append($el);
-      //   });
-      //
-      //   $container.data('movieId', movie.movie_id);
-      //   $container.append('<button class="update">Update</button>');
-      //   $container.append('<button class="delete">Delete</button>');
-      //   $('#movieList').append($container);
-      // });
+
+
     },
   });
 }
-/*function getPets() {
+function getPets() {
   $.ajax({
     type: 'GET',
-    url: '/movies',
-    success: function (movies) {
-      console.log(movies);
-      $('#movieList').empty();
-      movies.forEach(function (movie) {
+    url: '/pets',
+    success: function (pets) {
+      console.log(pets);
+      $('#petStatus').empty();
+      pets.forEach(function (pet) {
         $container = $('<div></div>');
-
+        $container.append('<div class = "petOwner">' + pet['last_name'] + ', ' + pet['first_name'] + '</div>');
         // fields I want to edit
-        var movieProperties = ['title', 'year', 'director'];
-        movieProperties.forEach(function (prop) {
+        var petProperties = ['name', 'breed', 'color'];
+        petProperties.forEach(function (prop) {
           var $el = $('<input type="text" id="' + prop + '" name="' + prop + '" />');
-          $el.val(movie[prop]);
+          $el.val(pet[prop]);
           $container.append($el);
         });
 
-        $container.data('movieId', movie.movie_id);
-        $container.append('<button class="update">Update</button>');
-        $container.append('<button class="delete">Delete</button>');
-        $('#movieList').append($container);
+         $container.data('petID', pet.id);
+         $container.append('<button class="update">Update</button>');
+         $container.append('<button class="delete">Delete</button>');
+         $container.append('<button class="checkInOut">Check In</button>');
+        $('#petStatus').append($container);
       });
     },
   });
-}*/
+}
 
 function postOwner(event) {
   event.preventDefault();
@@ -136,10 +125,52 @@ function postOwner(event) {
     url: '/owners',
     data: owner,
     success: function (data) {
-      console.log("pet success!");
+      console.log("success!");
+      getOwners();
+    },
+  });
+}
+
+
+
+
+function postVisit(event) {
+  event.preventDefault();
+
+var visit = {};
+var petId = getPetId($(this));
+
+if ($(this).text() === "Check In") {
+
+  var checkInTime = new Date();
+  var updatedTime = checkInTime.toISOString();
+
+  visit = {'checkIn' : updatedTime, 'petID' : petId};
+  $.ajax({
+    type: 'POST',
+    url: '/visits',
+    data: visit,
+    success: function (data) {
+      //getPets();
+
+    },
+  });
+  $(this).text("Check Out");
+}
+/*else {
+  var checkOutTime = Date($.now());
+  visit = {'checkOut' : checkOutTime, 'petID' : petId};
+  $.ajax({
+    type: 'POST',
+    url: '/visits',
+    data: visit,
+    success: function (data) {
       //getPets();
     },
   });
+  $(this).text("Check In");
+}*/
+
 }
 
 function postPet(event) {
@@ -148,16 +179,17 @@ function postPet(event) {
   var pet = {};
   var ownerList = {};
 
-  $.each($('#movieForm').serializeArray(), function (i, field) {
-    movie[field.name] = field.value;
+  $.each($('#petForm').serializeArray(), function (i, field) {
+  pet[field.name] = field.value;
   });
+  console.log(pet);
 
   $.ajax({
     type: 'POST',
     url: '/pets',
     data: pet,
     success: function (data) {
-      getOwners();
+      getPets();
     },
   });
 }

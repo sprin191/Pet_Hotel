@@ -1,0 +1,19 @@
+CREATE TABLE owners (
+    first_name varchar (20),
+    last_name varchar (20),
+    id SERIAL PRIMARY KEY
+);
+
+CREATE TABLE pets (
+    name varchar (20),
+    breed varchar (20),
+    color varchar (20),
+    id SERIAL PRIMARY KEY,
+    owner_id integer NOT NULL REFERENCES owners
+);
+
+CREATE TABLE visits (
+    check_in DATE,
+    check_out DATE,
+    pet_id integer NOT NULL REFERENCES pets
+);

@@ -6,10 +6,13 @@ var bodyParser = require('body-parser');
 
 var owners = require('./routes/owners');
 var pets = require('./routes/pets');
+var visits = require('./routes/visits');
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/owners', owners);
 app.use('/pets', pets);
+app.use('/visits', visits);
 // Catchall route
 app.get('/*', function (req, res) {
   var file = req.params[0] || '/views/index.html';

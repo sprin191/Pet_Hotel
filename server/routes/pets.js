@@ -10,7 +10,8 @@ router.get('/', function (req, res) {
     }
 
     client.query('SELECT first_name, last_name, name, breed, color, pets.id FROM pets' +
-'JOIN owners ON owners.id = pets.owner_id', function (err, result) {
+' JOIN owners ON owners.id = pets.owner_id',
+function (err, result) {
       done();
 
       console.log(result.rows);
@@ -20,22 +21,24 @@ router.get('/', function (req, res) {
   });
 });
 
-/*router.post('/', function (req, res) {
+router.post('/', function (req, res) {
   var pet = req.body;
 
   pg.connect(connectionString, function (err, client, done) {
     if (err) {
       res.sendStatus(500);
+      console.log("first error");
     }
 
-    client.query('INSERT INTO movies (title, year, genre, director) ' +
+    client.query('INSERT INTO pets (name, breed, color, owner_id) ' +
                   'VALUES ($1, $2, $3, $4)',
-                   [movie.title, movie.year, movie.genre, movie.director],
+                   [pet.petName, pet.breed, pet.color, pet.owner],
                  function (err, result) {
                    done();
 
                    if (err) {
                      res.sendStatus(500);
+                     console.log("second error");
                      return;
                    }
 
@@ -46,7 +49,7 @@ router.get('/', function (req, res) {
 
 router.put('/:id', function (req, res) {
   var id = req.params.id;
-  var movie = req.body;
+  var pet = req.body;
   console.log(req.body);
 
   pg.connect(connectionString, function (err, client, done) {
@@ -54,12 +57,12 @@ router.put('/:id', function (req, res) {
       res.sendStatus(500);
     }
 
-    client.query('UPDATE movies ' +
-                  'SET title = $1, ' +
-                  'year = $2, ' +
-                  'director = $3' +
-                  'WHERE movie_id = $4',
-                   [movie.title, movie.year, movie.director, id],
+    client.query('UPDATE pets ' +
+                  'SET name = $1, ' +
+                  'breed = $2, ' +
+                  'color = $3' +
+                  'WHERE id = $4',
+                   [pet.name, pet.breed, pet.color, id],
                  function (err, result) {
                    done();
 
@@ -82,8 +85,8 @@ router.delete('/:id', function (req, res) {
       res.sendStatus(500);
     }
 
-    client.query('DELETE FROM movies ' +
-                  'WHERE movie_id = $1',
+    client.query('DELETE FROM visits ' +
+                  'WHERE pet_id = $1',
                    [id],
                  function (err, result) {
                    done();
@@ -97,7 +100,7 @@ router.delete('/:id', function (req, res) {
                    res.sendStatus(200);
                  });
   });
-});*/
+});
 
 
 module.exports = router;
